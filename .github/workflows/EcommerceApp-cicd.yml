@@ -1,0 +1,35 @@
+name: Deploy Static Website to S3
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  ci:
+    name: Lint HTML, CSS, JS
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install linters
+      run: |
+        npm install -g htmlhint stylelint eslint
+
+    - name: Lint HTML files
+      run: |
+        htmlhint . || true
+
+    - name: Lint CSS files
+      run: |
+        stylelint "**/*.css" || true
+
+    - name: Lint JS files
+      run: |
+        eslint "**/*.js" || true
